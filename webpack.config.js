@@ -4,10 +4,10 @@ var webpack = require("webpack");
 
 module.exports = {
   entry: {
-    HelloWorld: './src/hello_world.js',
-    LikeButton: './src/like_button.js',
-    ParentChildren: './src/parent_children.js',
-    ApiSample: './src/api_sample.js'
+    HelloWorld: './src/javascripts/hello_world.js',
+    LikeButton: './src/javascripts/like_button.js',
+    ParentChildren: './src/javascripts/parent_children.js',
+    ApiSample: './src/javascripts/api_sample.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -28,7 +28,7 @@ module.exports = {
 
   devServer: {
     hot: true,
-    contentBase: './src',
+    contentBase: './src/views',
     port: 5000
   }
 }
