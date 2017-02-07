@@ -6,7 +6,8 @@ module.exports = {
   entry: {
     HelloWorld: './src/hello_world.js',
     LikeButton: './src/like_button.js',
-    ParentChildren: './src/parent_children.js'
+    ParentChildren: './src/parent_children.js',
+    ApiSample: './src/api_sample.js'
   },
   output: {
     path: path.join(__dirname, 'dist'),
