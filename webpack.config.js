@@ -4,6 +4,7 @@ var webpack = require("webpack");
 
 module.exports = {
   entry: {
+    WorkList: './src/javascripts/work_list.js',
     HelloWorld: './src/javascripts/hello_world.js',
     LikeButton: './src/javascripts/like_button.js',
     ParentChildren: './src/javascripts/parent_children.js',

@@ -6,8 +6,8 @@ import World from './components/world.jsx';
 
 ReactDom.render(
   <div>
-      <Hello />
-      <World />
+    <Hello />
+    <World />
   </div>,
   document.getElementById('hello-world')
 );
