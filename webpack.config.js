@@ -10,6 +10,7 @@ module.exports = {
     ParentChildren: './src/javascripts/parent_children.js',
     ApiSample: './src/javascripts/api_sample.js',
     TodoApp: './src/javascripts/todo_app.js',
+    PrePoje: './src/javascripts/pre_poje.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -19,10 +20,10 @@ module.exports = {
     loaders: [
       {
         test: /.jsx?$/,
-        loader: 'babel-loader?stage=0',
+        loader: 'babel-loader',
         exclude: /node_modules/,
         query: {
-          presets: ['es2015', 'react']
+          presets: ['es2015', 'react', 'stage-0']
         }
       }
     ]
