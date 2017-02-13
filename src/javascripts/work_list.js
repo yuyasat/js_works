@@ -5,14 +5,14 @@ class WorkList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      samples: ['index', 'hello_world', 'like_button', 'parent_children', 'api_sample']
+      samples: ['index', 'hello_world', 'like_button', 'parent_children', 'api_sample', 'pre_poje']
     }
   }
 
   render() {
-    const listItems = this.state.samples.map((sample) =>
-      <ListItem key={sample.toString()} sample={sample} />
-    );
+    const listItems = this.state.samples.map((sample) => {
+      return(<ListItem key={sample.toString()} sample={sample} />)
+    });
     return(
       <ul>{listItems}</ul>
     )
