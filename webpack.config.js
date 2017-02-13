@@ -9,6 +9,7 @@ module.exports = {
     LikeButton: './src/javascripts/like_button.js',
     ParentChildren: './src/javascripts/parent_children.js',
     ApiSample: './src/javascripts/api_sample.js',
+    TodoApp: './src/javascripts/todo_app.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
