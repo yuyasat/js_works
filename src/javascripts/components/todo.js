@@ -33,7 +33,7 @@ export default class Todo extends React.Component {
       return(
         <TodoList key={todo.id} todo={todo} onTodoDelete={this.handleTodoDelete} />
       )
-    })
+    });
     return(
       <div className='todoBox'>
         <InputForm onTodoSubmit={this.handleTodoSubmit} />
