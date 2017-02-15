@@ -11,6 +11,7 @@ module.exports = {
     ApiSample: './src/javascripts/api_sample.js',
     TodoApp: './src/javascripts/todo_app.js',
     PrePoje: './src/javascripts/pre_poje.js',
+    Poject: './src/javascripts/poject.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
