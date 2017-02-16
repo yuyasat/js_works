@@ -26,6 +26,7 @@ export default class Field extends React.Component {
       gridStates: gridStates
     }
     this.handleClickGrid = this.handleClickGrid.bind(this);
+    this.handleDown = this.handleDown.bind(this);
   }
 
   countColor(j, i, gridStates) {
@@ -77,6 +78,35 @@ export default class Field extends React.Component {
       gridStates: updatedGridStates === undefined ? newGridStates : updatedGridStates
     });
   }
+  handleDown(state) {
+    let newGridStates = this.state.gridStates;
+    let column2;
+    if(state.position === 0) {
+      column2 = state.column + 1
+    } else if(state.position === 2) {
+      column2 = state.column - 1
+    } else {
+      column2 = state.column
+    }
+
+    let r1 = 10;
+    let row1 = state.position === 3 ? 9 : 10;
+    while(newGridStates[r1][state.column].color) {
+      row1 = state.position === 3 ? r1 - 2 : r1 - 1;
+      r1--;
+    }
+
+    let r2 = 10;
+    let row2 = state.position === 1 ? 9 : 10;
+    while(newGridStates[r2][column2].color) {
+      row2 = state.position === 1 ? r2 - 2 : r2 - 1;
+      r2--;
+    }
+
+    newGridStates[row1][state.column].color = state.color1
+    newGridStates[row2][column2].color = state.color2
+    this.setState({ gridStates: newGridStates });
+  }
 
   render() {
     const grids = this.state.gridStates.map((gridStateRow, index_j) => {
@@ -89,7 +119,7 @@ export default class Field extends React.Component {
     });
     return(
       <div>
-        <Top />
+        <Top handleDown={this.handleDown} />
         {grids}
       </div>
     )

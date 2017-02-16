@@ -20,9 +20,10 @@ export default class Grid extends React.Component {
         border: '1px solid #000000',
         white_space: 'pre-wrap',
       },
-      red: {
-        background: '#ff0000',
-      }
+      red:    { background: '#ff0000' },
+      blue:   { background: '#0000ff' },
+      green:  { background: '#00ff00' },
+      yellow: { background: '#ffff00' },
     });
   }
   clickGrid() {
@@ -37,13 +38,18 @@ export default class Grid extends React.Component {
 
   render() {
     const styles = this.styles();
-    const color = this.state.color
-
+    const color = this.state.color;
     let style;
     if(color === 1) {
-      style = Object.assign(styles.defaultStyle, styles.red)
+      style = Object.assign(styles.defaultStyle, styles.red);
+    } else if(color === 2) {
+      style = Object.assign(styles.defaultStyle, styles.blue);
+    } else if(color === 3) {
+      style = Object.assign(styles.defaultStyle, styles.green);
+    } else if(color === 4) {
+      style = Object.assign(styles.defaultStyle, styles.yellow);
     } else {
-      style = styles.defaultStyle
+      style = styles.defaultStyle;
     }
     return(
       <div style={style} onClick={this.clickGrid} />

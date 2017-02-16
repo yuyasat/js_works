@@ -24,6 +24,7 @@ export default class TopGrid extends React.Component {
       red:    { background: '#ff0000' },
       blue:   { background: '#0000ff' },
       green:  { background: '#00ff00' },
+      yellow: { background: '#ffff00' },
     });
   }
   componentWillReceiveProps(newProps) {
@@ -61,7 +62,6 @@ export default class TopGrid extends React.Component {
         style = Object.assign(style, styles.yellow)
       }
     } else {
-      console.log(topGridState);
       if(topGridState.column === 0) {
         if(topGridState.position === 0) {
           style = Object.assign(styles.defaultStyle,  styles.middle, styles.col1)

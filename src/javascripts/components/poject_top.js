@@ -22,11 +22,16 @@ export default class Top extends React.Component {
       },
     })
   }
+  componentWillReceiveProps() {
+    this.setState({
+      color1: Math.floor(Math.random() * 4) + 1,
+      color2: Math.floor(Math.random() * 4) + 1,
+    });
+  }
   componentDidMount() {
     document.addEventListener('keydown', this._onKeyDown);
   }
   _onKeyDown(e) {
-    console.log(e.keyCode);
     const column = this.state.column
     const position = this.state.position
     if(e.keyCode === 39 && column < 7) { // right
@@ -46,6 +51,7 @@ export default class Top extends React.Component {
         position: position === 3 ? 0 : position + 1
       })
     } else if(e.keyCode === 40) { // down
+      this.props.handleDown(this.state);
     }
   }
 
