@@ -5,7 +5,10 @@ class WorkList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      samples: ['index', 'hello_world', 'like_button', 'parent_children', 'api_sample', 'pre_poje']
+      samples: [
+        'index', 'hello_world', 'like_button', 'parent_children', 'api_sample', 'pre_poje',
+        'poject',
+      ]
     }
   }
 
