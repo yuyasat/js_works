@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
+import { defaultColors } from '../modules/poject_styles.js';
+
 export default class Grid extends React.Component {
   constructor(props) {
     super(props)
@@ -12,19 +14,16 @@ export default class Grid extends React.Component {
     this.clickGrid = this.clickGrid.bind(this)
   }
   styles() {
-    return({
-      defaultStyle: {
-        float: 'left',
-        width: '30px',
-        height: '20px',
-        border: '1px solid #000000',
-        white_space: 'pre-wrap',
-      },
-      red:    { background: '#ff0000' },
-      blue:   { background: '#0000ff' },
-      green:  { background: '#00ff00' },
-      yellow: { background: '#ffff00' },
-    });
+    const defaultStyle = {
+      float: 'left',
+      width: '30px',
+      height: '20px',
+      border: '1px solid #000000',
+      white_space: 'pre-wrap',
+    }
+    return(
+      Object.assign({ defaultStyle: defaultStyle }, defaultColors())
+    )
   }
   clickGrid() {
     this.props.onClickGrid(this.state);
