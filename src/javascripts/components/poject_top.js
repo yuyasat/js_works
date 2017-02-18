@@ -7,7 +7,7 @@ export default class Top extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      column: 1,
+      column: 2,
       position: 1, // 0: 右, 1: 上, 2: 左, 3: 下
       color1: Math.floor(Math.random() * 4) + 1,
       color2: Math.floor(Math.random() * 4) + 1,

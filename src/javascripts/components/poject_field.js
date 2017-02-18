@@ -70,14 +70,14 @@ export default class Field extends React.Component {
   handleClickGrid(state) {
     let newGridStates = this.state.gridStates
     newGridStates[state.j][state.i].color = 1;
-    let updatedGridStates;
+
+    let updatedGridStates = newGridStates;
     if(this.countColor(state.j, state.i, newGridStates) >= 4) {
       updatedGridStates = this.deleteColor(state.j, state.i, newGridStates)
     }
-    this.setState({
-      gridStates: updatedGridStates === undefined ? newGridStates : updatedGridStates
-    });
+    this.setState({ gridStates: updatedGridStates });
   }
+
   handleDown(state) {
     let newGridStates = this.state.gridStates;
     let column2;
@@ -106,6 +106,53 @@ export default class Field extends React.Component {
     newGridStates[row1][state.column].color = state.color1
     newGridStates[row2][column2].color = state.color2
     this.setState({ gridStates: newGridStates });
+
+    this.chain(newGridStates);
+  }
+
+  chain(newGridStates) {
+    let updatedGridStates = newGridStates;
+    for(let j = 0; j < newGridStates.length; j++) {
+      for(let i = 0; i < newGridStates[0].length; i++) {
+        if(newGridStates[j][i].color > 0 && this.countColor(j, i, newGridStates) >= 4) {
+          updatedGridStates = this.deleteColor(j, i, newGridStates);
+        }
+      }
+    }
+
+    setTimeout(() => {
+      this.setState({ gridStates: updatedGridStates });
+
+      setTimeout(() => {
+        const allocatedGridsWithCount = this.allocateGrids(updatedGridStates);
+        const count = allocatedGridsWithCount.count;
+        const allocatedGridStates = allocatedGridsWithCount.gridStates;
+
+        this.setState({ gridStates: allocatedGridStates });
+
+        setTimeout(() => {
+          if(count > 0) { this.chain(allocatedGridStates) }
+        }, 300);
+      }, 300);
+    }, 300);
+  }
+
+  allocateGrids(gridStates) {
+    let newGridStates = gridStates;
+    let count = 0;
+    for(let i = 0; i < gridStates[0].length; i++) {
+      let spaces = 0;
+      for(let j = gridStates.length - 1; j >= 0; j--) {
+        if(!newGridStates[j][i].color) {
+          spaces++;
+        } else if(spaces > 0) {
+          newGridStates[j + spaces][i].color = newGridStates[j][i].color;
+          newGridStates[j][i].color = 0;
+          count++;
+        }
+      }
+    }
+    return { count: count, gridStates: newGridStates };
   }
 
   render() {
