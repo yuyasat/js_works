@@ -6,14 +6,10 @@ import TopGrid from './poject_top_grid';
 export default class Top extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      column: 2,
-      position: 1, // 0: 右, 1: 上, 2: 左, 3: 下
-      color1: Math.floor(Math.random() * 4) + 1,
-      color2: Math.floor(Math.random() * 4) + 1,
-    }
-    this._onKeyDown = this._onKeyDown.bind(this);
+    this.state = this.props.topState;
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
+
   styles() {
     return({
       defaultStyle: {
@@ -22,35 +18,57 @@ export default class Top extends React.Component {
       },
     })
   }
-  componentWillReceiveProps() {
-    this.setState({
-      color1: Math.floor(Math.random() * 4) + 1,
-      color2: Math.floor(Math.random() * 4) + 1,
-    });
+
+  componentWillReceiveProps(newProps) {
+    if(newProps.keyAccept) {
+      this.state = newProps.topState
+    } else {
+      this.setState({ color1: 0, color2: 0 });
+    }
   }
+
+  componentDidUpdate() {
+    if(this.props.keyAccept) {
+      document.addEventListener('keydown', this.onKeyDown);
+    } else {
+      document.removeEventListener('keydown', this.onKeyDown);
+    }
+  }
+
   componentDidMount() {
-    document.addEventListener('keydown', this._onKeyDown);
+    document.addEventListener('keydown', this.onKeyDown);
   }
-  _onKeyDown(e) {
+
+  onKeyDown(e) {
     const column = this.state.column
     const position = this.state.position
-    if(e.keyCode === 39 && column < 7) { // right
+
+    // right
+    if(e.keyCode === 39 && column < 7) {
       if(column === 6 || position === 0 && column === 5) { return }
-      this.setState({ column: column + 1 })
-    } else if(e.keyCode === 37 && column > 0) { // left
+      this.setState({ column: column + 1 });
+
+    // left
+    } else if(e.keyCode === 37 && column > 0) {
       if(column === 0 || position === 2 && column === 1) { return }
-      this.setState({ column: column - 1 })
-    } else if(e.keyCode === 88 || e.keyCode === 38) { // x or up
+      this.setState({ column: column - 1 });
+
+    // x or up
+    } else if(e.keyCode === 88 || e.keyCode === 38) {
       if(position === 3 && column === 0 || position === 1 && column === 6) { return }
       this.setState({
         position: position === 0 ? 3 : position - 1,
-      })
-    } else if(e.keyCode === 90 || e.keyCode === 38) { // z
+      });
+
+    // z
+    } else if(e.keyCode === 90 || e.keyCode === 38) {
       if(position === 3 && column === 6 || position === 1 && column === 0) { return }
       this.setState({
         position: position === 3 ? 0 : position + 1
-      })
-    } else if(e.keyCode === 40) { // down
+      });
+
+    // down
+    } else if(e.keyCode === 40) {
       this.props.handleDown(this.state);
     }
   }
@@ -58,6 +76,7 @@ export default class Top extends React.Component {
   render() {
     const column = this.state.column
     const key = new Date().getTime();
+
     return(
       <div style={this.styles().defaultStyle}>
         <TopGrid key={'1'+key} topGridState={this.state} position='1' />

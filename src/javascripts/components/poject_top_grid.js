@@ -8,7 +8,6 @@ export default class TopGrid extends React.Component {
         position: 'absolute',
         width: '30px',
         height: '20px',
-        border: '1px solid #000000',
         white_space: 'pre-wrap',
       },
       upper:  { top: '70px' },

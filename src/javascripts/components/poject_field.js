@@ -19,13 +19,22 @@ export default class Field extends React.Component {
         })
       )
     });
+    const topState = {
+      column: 2,
+      position: 1, // 0: 右, 1: 上, 2: 左, 3: 下
+      color1: Math.floor(Math.random() * 4) + 1,
+      color2: Math.floor(Math.random() * 4) + 1,
+    }
 
     this.row = row;
     this.column = column;
+
     this.state = {
-      gridStates: gridStates
+      gridStates: gridStates,
+      topState: topState,
+      keyAccept: true,
     }
-    this.handleClickGrid = this.handleClickGrid.bind(this);
+
     this.handleDown = this.handleDown.bind(this);
   }
 
@@ -67,19 +76,9 @@ export default class Field extends React.Component {
     return gridStates;
   }
 
-  handleClickGrid(state) {
-    let newGridStates = this.state.gridStates
-    newGridStates[state.j][state.i].color = 1;
-
-    let updatedGridStates = newGridStates;
-    if(this.countColor(state.j, state.i, newGridStates) >= 4) {
-      updatedGridStates = this.deleteColor(state.j, state.i, newGridStates)
-    }
-    this.setState({ gridStates: updatedGridStates });
-  }
-
   handleDown(state) {
     let newGridStates = this.state.gridStates;
+    // set the second grid column
     let column2;
     if(state.position === 0) {
       column2 = state.column + 1
@@ -89,25 +88,33 @@ export default class Field extends React.Component {
       column2 = state.column
     }
 
-    let r1 = 10;
-    let row1 = state.position === 3 ? 9 : 10;
-    while(newGridStates[r1][state.column].color) {
+    if(state.column === column2 && newGridStates[0][state.column].color !== 0) { return }
+
+    let r1 = this.row - 1;
+    let row1 = state.position === 3 ? r1 - 1 : r1; // 3 means lower
+    while(r1 >= 0 && newGridStates[r1][state.column].color) {
       row1 = state.position === 3 ? r1 - 2 : r1 - 1;
       r1--;
     }
 
-    let r2 = 10;
-    let row2 = state.position === 1 ? 9 : 10;
-    while(newGridStates[r2][column2].color) {
+    let r2 = this.row - 1;
+    let row2 = state.position === 1 ? r2 - 1 : r2; // 1 means upper
+    while(r2 >= 0 && newGridStates[r2][column2].color) {
       row2 = state.position === 1 ? r2 - 2 : r2 - 1;
       r2--;
     }
 
-    newGridStates[row1][state.column].color = state.color1
-    newGridStates[row2][column2].color = state.color2
-    this.setState({ gridStates: newGridStates });
+    if(row1 >= 0) { newGridStates[row1][state.column].color = state.color1 }
+    if(row2 >= 0) { newGridStates[row2][column2].color = state.color2 }
+    this.setState({ gridStates: newGridStates, keyAccept: false });
 
     this.chain(newGridStates);
+
+    const nextTopState = Object.assign(this.state.topState, {
+      color1: Math.floor(Math.random() * 4) + 1,
+      color2: Math.floor(Math.random() * 4) + 1,
+    });
+    this.setState({ topState: nextTopState });
   }
 
   chain(newGridStates) {
@@ -120,21 +127,28 @@ export default class Field extends React.Component {
       }
     }
 
+    // setTimeout(function() { "do something" }.bind(this), 300); equals
+    // setTimeout(() => { "do something" }, 300);
     setTimeout(() => {
       this.setState({ gridStates: updatedGridStates });
 
       setTimeout(() => {
         const allocatedGridsWithCount = this.allocateGrids(updatedGridStates);
         const count = allocatedGridsWithCount.count;
-        const allocatedGridStates = allocatedGridsWithCount.gridStates;
+        updatedGridStates = allocatedGridsWithCount.gridStates;
 
-        this.setState({ gridStates: allocatedGridStates });
+        this.setState({ gridStates: updatedGridStates });
 
         setTimeout(() => {
-          if(count > 0) { this.chain(allocatedGridStates) }
+          if(count > 0) {
+            this.chain(updatedGridStates);
+          } else {
+            this.setState({ keyAccept: true });
+          }
         }, 300);
       }, 300);
     }, 300);
+    return updatedGridStates;
   }
 
   allocateGrids(gridStates) {
@@ -160,13 +174,15 @@ export default class Field extends React.Component {
       return(
         <GridRow
           key={'row' + index_j}
-          gridStateRow={gridStateRow}
-          handleClickGrid={this.handleClickGrid} />
+          gridStateRow={gridStateRow} />
       )
     });
     return(
       <div>
-        <Top handleDown={this.handleDown} />
+        <Top
+          handleDown={this.handleDown}
+          topState={this.state.topState}
+          keyAccept={this.state.keyAccept} />
         {grids}
       </div>
     )
