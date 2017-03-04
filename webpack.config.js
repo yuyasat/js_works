@@ -12,6 +12,7 @@ module.exports = {
     TodoApp: './src/javascripts/todo_app.js',
     PrePoje: './src/javascripts/pre_poje.js',
     Poject: './src/javascripts/poject.js',
+    ReduxTodo: './src/javascripts/ReduxTodo',
   },
   output: {
     path: path.join(__dirname, 'dist'),
