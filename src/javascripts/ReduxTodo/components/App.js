@@ -1,25 +1,14 @@
-import React, { Component } from 'react'
-
-import AddTodo from './AddTodo'
-import Todo from './Todo'
-import TodoList from './TodoList'
+import React from 'react'
 import Footer from './Footer'
+import AddTodo from '../containers/AddTodo'
+import VisibleTodoList from '../containers/VisibleTodoList'
 
-export default class App extends Component {
-  render() {
-    const todos = [
-      { text: 'aiueo' }, { text: 'kakiku' }, { text: 'sasisu' }
-    ]
-    return (
-      <div>
-        <AddTodo onAddClick={(text) => console.log("add todo", text)} />
-        <TodoList todos={todos} onTodoClick={(index) => console.log('todo clicked', index)}/>
-        <Footer
-          filter='SHOW_ALL'
-          onFilterChange={(filter) =>
-            console.log('filter change', filter)
-          } />
-      </div>
-    )
-  }
-}
+const App = () => (
+  <div>
+    <AddTodo />
+    <VisibleTodoList />
+    <Footer />
+  </div>
+)
+
+export default App

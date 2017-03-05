@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
+// あとで書き換え
 export default class Todo extends Component {
   render () {
     const style = {
