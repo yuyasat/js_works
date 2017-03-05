@@ -7,7 +7,7 @@ class WorkList extends React.Component {
     this.state = {
       samples: [
         'index', 'hello_world', 'like_button', 'parent_children', 'api_sample', 'pre_poje',
-        'poject',
+        'poject', 'redux_todo'
       ]
     }
   }
