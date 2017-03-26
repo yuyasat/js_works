@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>gihyo Vue.js part 4</title>
+</head>
+<body>
+  <div id="app">
+    <router-link to="/top">トップページ</router-link>
+    <router-link to="/users">ユーザー一覧ページ</router-link>
+    <router-link :to="{ name: 'user', params: { userId: 123 }}">ユーザー詳細ページ</router-link>
+    <router-view></router-view>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script>
+    var User = {
+      template:
+        '<div class="user">' +
+          '<h2>ユーザーIDは{{ $route.params.userId }}です。</h2>' +
+          '<router-link :to="\'/user/\' + $route.params.userId + \'/profile\'">' +
+            'ユーザーのプロフィールページを見る' +
+          '</router-link>' +
+          '<router-link :to="\'/user/\' + $route.params.userId + \'/posts\'">' +
+            'ユーザーの投稿ページを見る' +
+          '</router-link>' +
+          '<router-view></router-view>' +
+        '</div>'
+    }
+    var UserProfile = {
+      template:
+        '<div class="user-profile">' +
+          '<h3>こちらはユーザー{{ $route.params.userId }}のプロフィールページです</h3>' +
+        '</div>'
+    }
+    var router = new VueRouter({
+      routes: [
+        {
+          path: '/top',
+          component: {
+            template: '<div>トップページです</div>'
+          }
+        },
+        {
+          path: '/users',
+          component: {
+            template: '<div>ユーザー一覧ページです</div>'
+          }
+        },
+        {
+          path: '/users/:userId',
+          name: 'user',
+          component: User,
+          children: [
+            {
+              path: 'profile',
+              component: UserProfile
+            },
+            {
+              path: 'posts',
+              component: UserProfile
+            }
+          ]
+        }
+     ]
+    });
+
+    var app = new Vue({
+      router: router
+    }).$mount("#app")
+  </script>
+</body>
+</table>
