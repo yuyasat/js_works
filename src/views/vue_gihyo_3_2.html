@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>gihyo Vue.js part 3 login</title>
+</head>
+<body>
+  <div id="header-example">
+    <page></page>
+  </div>
+  <div id="login-example">
+    <user-login></user-login>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script>
+    var headerTemplate = `
+      <div style="background: white;">
+        <slot name="header"></slot>
+      </div>
+    `
+
+    Vue.component('page-header', {
+      template: headerTemplate
+    });
+
+    var pageTemplate = `
+      <div>
+        <page-header>
+          <h1 slot="header">冬の果物</h1>
+        </page-header>
+        <ul>
+          <li>りんご</li>
+          <li>イチゴ</li>
+        </ul>
+      </div>
+    `
+
+    Vue.component('page', {
+      template: pageTemplate
+    })
+
+    new Vue({
+      el: "#header-example"
+    });
+
+    var auth = {
+      login: function(id, pass) {
+        window.alert("login id:" + id + "\n" + "password:" + pass);
+      }
+    }
+
+    var loginTemplate = `
+      <div>
+        <input type="text" placeholder="ログインID" v-model="userid">
+        <input type="password" placeholder="パスワード" v-model="password">
+        <button v-on:click="login">ログイン</button>
+      </div>
+    `
+
+    Vue.component('user-login', {
+      template: loginTemplate,
+      data: function() {
+        return {
+          userid: '',
+          password: ''
+        }
+      },
+      methods: {
+        login: function() {
+          auth.login(this.userid, this.password);
+        }
+      }
+    });
+
+    new Vue({
+      el: "#login-example"
+    });
+  </script>
+</body>
+</table>

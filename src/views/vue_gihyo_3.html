@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>gihyo Vue.js part 3</title>
+</head>
+<body>
+  <div id="fruits-list">
+    <fruits-list-parent></fruits-list-parent>
+  </div>
+  <div id="fruits-counter">
+    <div v-for="fruit in fruits">
+      {{ fruit.name }}: <counter-button v-on:increment="increment()"></counter-button>
+    </div>
+    <p>合計: {{ total }}</p>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script>
+    var counterButton = Vue.extend({
+      template: '<span>{{ counter }}個<button v-on:click="addToCart">追加</button></span>',
+      data: function() {
+        return { counter: 0 }
+      },
+      methods: {
+        addToCart: function() {
+          this.counter += 1
+          this.$emit('increment')
+        }
+      }
+    });
+
+    new Vue({
+      el: '#fruits-counter',
+      components: { 'counter-button': counterButton },
+      data: {
+        total: 0,
+        fruits: [
+          { name: '梨' },
+          { name: 'イチゴ' }
+        ]
+      },
+      methods: {
+        increment: function() {
+          this.total += 1
+        }
+      }
+    });
+
+    var fruitsListChild = Vue.extend({
+      template: '<h1>フルーツ一覧</h1>'
+    })
+
+    var fruitsListParent = Vue.extend({
+      template: '<div>親コンポーネント<fruits-list-child></fruits-list-child></div>',
+      components: {
+        'fruits-list-child': fruitsListChild
+      }
+    })
+
+    new Vue({
+      el: "#fruits-list",
+      components: {
+        'fruits-list-parent': fruitsListParent
+      }
+    })
+  </script>
+</body>
+</table>
