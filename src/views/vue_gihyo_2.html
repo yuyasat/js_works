@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>gihyo Vue.js part 2</title>
+</head>
+<body>
+  <div id="example">
+    <li v-for="item in items">
+      {{ item.name }}は{{ item.price }}
+    </li>
+  </div>
+  <div id="example2">
+    <p>名前 {{ name }}</p>
+    <p>
+      <input v-model="name">
+      <!-- <input v-model.lazy="name"> -->
+      <!-- <input type="text" v-on:input="updateName($event)"> -->
+      <!-- <input type="text" v-on:change="name = $event.target.value"> -->
+    </p>
+    <p v-show="!isValid">
+      名前を入力してください
+    </p>
+    <p v-show="isValid">
+      <button v-on:click="sendData">送信</button>
+    </p>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script>
+    var vm2 = new Vue({
+      el: '#example2',
+      data: {
+        name: '',
+      },
+      computed: {
+        isValid: function() {
+          return this.name.length > 0;
+        }
+      },
+      methods: {
+        updateName: function(event) {
+          this.name = event.target.value;
+        },
+        sendData: function() {
+          alert(this.name)
+        }
+      }
+    });
+    var vm = new Vue({
+      el: '#example',
+      data: {
+        items: [
+          { name: 'みかん',   price: 100 },
+          { name: 'もも',     price: 300 },
+          { name: 'いちじく', price: 500 },
+          { name: 'メロン',   price: 1000 }
+        ]
+      },
+      computed: {
+        priceWithTax: function() {
+          return this.price * 1.08;
+        }
+      }
+    });
+  </script>
+</body>
+</table>
