@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>gihyo Vue.js part 5</title>
+</head>
+<body>
+  <div id="app">
+    <router-link to="/top">トップページ</router-link>
+    <router-link to="/users?redirect=true">ユーザー一覧ページ</router-link>
+    <router-link to="/logout" v-show="Auth.loggedIn()">ログアウト</router-link>
+    <router-view></router-view>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script type="x-template" id="user-list">
+    <div>
+      <div class="loading" v-if="loading">ロード中...</div>
+      <div v-if="error" class="error">
+        {{ error }}
+      </div>
+      <div v-for="user in users" :key="user.id">
+        <router-link :to="{ path: '/users/' + user.id }">{{ user.name }}</router-link>
+      </div>
+    </div>
+  </script>
+  <script type="x-template" id="user-detail">
+    <div>
+      <div class="loading" v-if="loading">Loading...</div>
+      <div v-if="error" class="error">
+        {{ error }}
+      </div>
+      <div v-if="user">
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.description }}</p>
+      </div>
+    </div>
+  </script>
+  <script type="x-template" id="login">
+    <div>
+      <h2>Login</h2>
+      <p v-if="$route.query.redirect">
+        ログインしてください
+      </p>
+      <form @submit.prevent="login">
+        <label><input v-model="email" placeholder="email"></label>
+        <label><input v-model="pass" placeholder="password" type="password"></label><br>
+        <button type="submit">ログイン</button>
+        <p v-if="error" class="error">ログインに失敗しました</P>
+      </form>
+    </div>
+  </script>
+
+  <script>
+    var Auth = {
+      login: function (email, pass, cb) {
+        // ダミーデータを使った擬似ログイン
+        setTimeout(function () {
+          if (email === 'vue@example.com' && pass === 'vue') {
+            // ログイン成功時はローカルストレージにtokenを保存する
+            localStorage.token = Math.random().toString(36).substring(7)
+            if (cb) { cb(true) }
+          } else {
+            if (cb) { cb(false) }
+          }
+        }, 0)
+      },
+
+      logout: function () {
+        delete localStorage.token
+      },
+
+      loggedIn: function () {
+        // ローカルストレージにtokenがあればログイン状態とみなす
+        return !!localStorage.token
+      }
+    }
+
+    var userData = [
+      {
+        id: '001',
+        name: 'Takuya Tejima',
+        description: '新卒で入社した日本IBM研究所にて検索・テキスト解析ソフトウェア製品の開発に関わったのち，LINE株式会社にて数多くのLINEプラットフォーム開発を担当。その後，株式会社Indieの共同創業者&CTOとしてサービス開発全般を担当。'
+      },
+      {
+        id: '002',
+        name: 'Yohei Noda',
+        description: '1985年静岡県生まれ。日本IBMソフトウェア開発研究所にて電子情報開示関連のソフトウェア開発に携わった後，株式会社プレイドに入社。Web接客ツールKARTEの開発を行っている。業務でもVue.jsを使用。アウトドア・フットサルが趣味。'
+      }
+    ]
+
+    var getUsers = function(callback) {
+      setTimeout(function() {
+        callback(null, userData)
+      }, 1000)
+    }
+    var getUser = function(userId, callback) {
+      setTimeout(function() {
+        var filteredUsers = userData.filter(function (user) {
+          return user.id === userId
+        })
+        callback(null, filteredUsers && filteredUsers[0])
+      }, 1000)
+    }
+
+    var Login = {
+      template: '#login',
+      data: function() {
+        return {
+          email: 'vue@example.com',
+          pass: '',
+          error: false
+        }
+      },
+      methods: {
+        login: function() {
+          Auth.login(this.email, this.pass, (function(loggedIn) {
+            if(!loggedIn) {
+              this.error = true
+            } else {
+              this.$router.replace(this.$route.query.redirect || '/')
+            }
+          }).bind(this))
+        }
+      }
+    }
+    var UserList = {
+      template: '#user-list',
+      data: function() {
+        return {
+          loading: false,
+          users: function() { return [] },
+          error: null
+        }
+      },
+      created: function() {
+        this.fetchData()
+      },
+      watch: {
+        '$route': 'fetchData'
+      },
+      methods: {
+        fetchData: function() {
+          this.loading = true
+          getUsers((function(err, users) {
+            this.loading = false
+            if(err) {
+              this.error = err.toString()
+            } else {
+              this.users = users
+            }
+          }).bind(this))
+        }
+      }
+    }
+    var UserDetail = {
+      template: '#user-detail',
+      data: function () {
+        return {
+          user: null,
+          error: null
+        }
+      },
+
+      created: function () {
+        this.fetchData()
+      },
+
+      watch: {
+        '$route': 'fetchData'
+      },
+
+      methods: {
+        fetchData: function () {
+          this.loading = true
+          getUser(this.$route.params.userId, (function (err, user) {
+            this.loading = false
+            if (err) {
+              this.error = err.toString()
+            } else {
+              this.user = user
+            }
+          }).bind(this))
+        }
+      }
+    }
+    var router = new VueRouter({
+      routes: [
+        {
+          path: '/top',
+          component: {
+            template: '<div>トップページです</div>'
+          }
+        },
+        {
+          path: '/users',
+          component: UserList
+        },
+        {
+          path: '/users/:userId',
+          component: UserDetail,
+          beforeEnter: function(to, from, next) {
+            if(!Auth.loggedIn()) {
+              next({
+                path: '/login',
+                query: { redirect: to.fullPath }
+              })
+            } else {
+              next()
+            }
+          }
+        },
+        {
+          path: '/login',
+          component: Login
+        },
+        {
+          path: '/logout',
+          beforeEnter: function(to, from, next) {
+            Auth.logout()
+            next('/top')
+          }
+        },
+      ]
+    });
+
+    var app = new Vue({
+      data: {
+        Auth: Auth
+      },
+      router: router
+    }).$mount("#app")
+  </script>
+</body>
+</table>
